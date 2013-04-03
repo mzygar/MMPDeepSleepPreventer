@@ -59,90 +59,71 @@
 #pragma mark Synthesizes
 
 @synthesize audioPlayer       = audioPlayer_;
-@synthesize preventSleepTimer = preventSleepTimer_;
-
 
 #pragma mark -
 #pragma mark Creation and Destruction
 
 - (id)init
 {
-	if ( !(self = [super init]) )
-		return nil;
-	
-	[self mmp_setUpAudioSession];
-	
-	// Set up path to sound file
-	NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"MMPSilence"
-	                                                          ofType:@"wav"];
-	
-	NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:soundFilePath];
-	
-	// Set up audio player with sound file
-	audioPlayer_ = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
-	                                                      error:nil];
-	[fileURL release];
-	
-	[self.audioPlayer prepareToPlay];
-	
-	// You may want to set this to 0.0 even if your sound file is silent.
-	// I don't know exactly, if this affects battery life, but it can't hurt.
-	[self.audioPlayer setVolume:0.0];
-	
+    if ( !(self = [super init]) )
+    {
+        return nil;
+    }
+
+    [self mmp_setUpAudioSession];
+
+    // Set up path to sound file
+    NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"MMPSilence"
+                               ofType:@"wav"];
+
+    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:soundFilePath];
+
+    // Set up audio player with sound file
+    audioPlayer_ = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL
+                    error:nil];
+    [fileURL release];
+
+    [self.audioPlayer prepareToPlay];
+    // You may want to set this to 0.0 even if your sound file is silent.
+    // I don't know exactly, if this affects battery life, but it can't hurt.
+    [self.audioPlayer setVolume:0.0];
+    //set the infinite loop, stop is triggered by stopPreventSleep method
+    [self.audioPlayer setNumberOfLoops:-1];
+
     return self;
 }
 
-
 - (void)dealloc
 {
-	[preventSleepTimer_ release];
-	[audioPlayer_       release];
-	
-	[super dealloc];
+    [audioPlayer_       release];
+    [super dealloc];
 }
-
 
 #pragma mark -
 #pragma mark Public Methods
 
 - (void)startPreventSleep
 {
-	// We need to play a sound at least every 10 seconds to keep the iPhone awake.
-	// It doesn't seem to affect battery life how often inbetween these 10 seconds the sound file is played.
-	// To prevent the iPhone from falling asleep due to timing/performance issues, we play a sound file every five seconds.
-	
-	// We create a new repeating timer, that begins firing immediately and then every five seconds afterwards.
-	// Every time it fires, it calls -mmp_playPreventSleepSound.
-	NSTimer *preventSleepTimer = [[NSTimer alloc] initWithFireDate:[NSDate date]
-	                                                      interval:5.0
-	                                                        target:self
-	                                                      selector:@selector(mmp_playPreventSleepSound)
-	                                                      userInfo:nil
-	                                                       repeats:YES];
-	self.preventSleepTimer = preventSleepTimer;
-	[preventSleepTimer release];
-	
-	// Add the timer to the current run loop.
-	[[NSRunLoop currentRunLoop] addTimer:self.preventSleepTimer
-	                             forMode:NSDefaultRunLoopMode];
+    [self mmp_playPreventSleepSound];    
 }
-
 
 - (void)stopPreventSleep
 {
-	[self.preventSleepTimer invalidate];
-	self.preventSleepTimer = nil;
+    [self.audioPlayer stop];
 }
 
+- (BOOL)isPreventingSleep
+{
+    return [self.audioPlayer isPlaying];
+}
 
 #pragma mark -
 #pragma mark Private Methods
 
 - (void)mmp_playPreventSleepSound
 {
-	[self.audioPlayer play];
+    [self.audioPlayer play];
 }
-
 
 - (void)mmp_setUpAudioSession
 {

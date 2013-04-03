@@ -46,15 +46,16 @@
 // as simple drop-in code.
 
 #ifndef MMPDLog
-	#ifdef DEBUG
-		#define MMPDLog(format, ...) NSLog((@"%s [Line %d] " format), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-	#else
-		#define MMPDLog(...) do { } while (0)
-	#endif
+    #ifdef DEBUG
+        #define MMPDLog(format, ...) NSLog( (@"%s [Line %d] " format), __PRETTY_FUNCTION__, __LINE__, ## __VA_ARGS__ )
+    #else
+        #define MMPDLog(...) do {} \
+    while (0)
+    #endif
 #endif
 
 #ifndef MMPALog
-	#define MMPALog(format, ...) NSLog((@"%s [Line %d] " format), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #define MMPALog(format, ...) NSLog( (@"%s [Line %d] " format), __PRETTY_FUNCTION__, __LINE__, ## __VA_ARGS__ )
 #endif
 
 
@@ -70,16 +71,11 @@
 #pragma mark Public Interface
 
 @interface MMPDeepSleepPreventer : NSObject
-{
-
-}
-
 
 #pragma mark -
 #pragma mark Properties
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
-@property (nonatomic, retain) NSTimer       *preventSleepTimer;
 
 
 #pragma mark -
@@ -87,5 +83,6 @@
 
 - (void)startPreventSleep;
 - (void)stopPreventSleep;
+- (BOOL)isPreventingSleep;
 
 @end
