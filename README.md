@@ -1,28 +1,29 @@
-Description:
-	MMPDeepSleepPreventer is an Objective-C class used to prevent iOS devices from deep sleeping.
-	This has been tested on an iOS versions 3.0 to 4.2.1, so far and should work on all devices,
-	running one of these iOS versions.
+## Description:
+MMPDeepSleepPreventer is an Objective-C class used to prevent iOS devices from deep sleeping.
+This has been tested on an iOS versions 3.0 to 4.2.1, so far and should work on all devices,
+running one of these iOS versions.
 	
-	MMPDeepSleepPreventer is released under the New BSD License. (Below is the exact license text).
-	If you use this code a little attribution note would be greatly appreciated.
+MMPDeepSleepPreventer is released under the New BSD License. (Below is the exact license text).
+If you use this code a little attribution note would be greatly appreciated.
+
+### Changes in my fork(mzygar)
+The previous method is not reliable in the iOS 5.0+. Instead of `NSTimer` I made the player play an inifite loop. It might not be the best solution(any improvements are welcome), but it's reliable.
+
+## How-To Use:
+- Add MMPDeepSleepPreventer.h and MMPDeepSleepPreventer.m as well as  MMPSilence.wav to your project.
+-  Add “AVFoundation.framework” and “AudioToolbox.framework” to your project.
+- Import MMPDeepSleepPreventer.h where you want to use the class.
+- Instantiate an MMPDeepSleepPreventer object.
+- Use `[MMPDeepSleepPreventerInstance startPreventSleep]`
+	  and `[MMPDeepSleepPreventerInstance stopPreventSleep]` when needed.
 
 
-How-To Use:
-	- Add MMPDeepSleepPreventer.h and MMPDeepSleepPreventer.m as well as
-	  MMPSilence.wav to your project.
-	- Add “AVFoundation.framework” and “AudioToolbox.framework” to your project.
-	- Import MMPDeepSleepPreventer.h where you want to use the class.
-	- Instantiate an MMPDeepSleepPreventer object.
-	- Use -[MMPDeepSleepPreventer startPreventSleep]
-	  and -[MMPDeepSleepPreventer stopPreventSleep] when needed.
+## Inspired by:
+- Some question on stackoverflow.com
+- Some posts on Apple's devforums.
 
 
-Inspired by:
-	Some question on stackoverflow.com
-	Some posts on Apple's devforums.
-
-
-License:
+# License:
 Copyright (c) 2009-2011, Marco Peluso - marcopeluso.com
 All rights reserved.
 
